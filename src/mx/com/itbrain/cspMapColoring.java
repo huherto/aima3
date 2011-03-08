@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +32,12 @@ public class cspMapColoring extends TestCase {
 	static class Arc {
 		Province first;
 		Province second;
-		Arc(Province p1, Province p2) {
+		public Arc(Province p1, Province p2) {
 			first = p1;
 			second = p2;
+		}
+		public String toString() {
+			return "("+first+","+second+")";
 		}
 	};
 	
@@ -51,12 +56,13 @@ public class cspMapColoring extends TestCase {
 				if (domain(arc.first).isEmpty()) {
 					return false;
 				}
-				for(Province p: Province.values()) {
-					if (p != arc.second && p != arc.first) {
-						queue.add(new Arc(p, arc.first));
+				
+				for(Arc na : initialArcs()) {
+					if ( na.first != arc.second) {
+						if (na.first == arc.first || na.second == arc.first)
+						queue.add(na);
 					}
 				}
-				
 			}
 		}
 		return true;
@@ -70,14 +76,17 @@ public class cspMapColoring extends TestCase {
 		boolean revised = false;
 		Domain domainFirst = domain(first);
 		Domain domainSecond = domain(second);
-		for(Color colorFirst : domainFirst) {
+		
+		Iterator<Color> iter = domainFirst.iterator();
+		while(iter.hasNext()) {
+			Color colorFirst = iter.next();
 			boolean allowed = false;
 			for(Color colorSecond : domainSecond) {
 				if (colorFirst != colorSecond)
 					allowed = true;
 			}
 			if (!allowed) {
-				domainFirst.remove(colorFirst);
+				iter.remove();
 				revised = true;
 			}
 		}
@@ -91,7 +100,7 @@ public class cspMapColoring extends TestCase {
 	}
 	
 	private List<Arc> initialArcs() {
-		List<Arc> arcs = new ArrayList<Arc>();
+		List<Arc> arcs = new LinkedList<Arc>();
 		arcs.add(new Arc(Province.WA,  Province.NT));
 		arcs.add(new Arc(Province.WA,  Province.SA));
 		arcs.add(new Arc(Province.NT,  Province.SA));
@@ -101,6 +110,17 @@ public class cspMapColoring extends TestCase {
 		arcs.add(new Arc(Province.SA,  Province.V));
 		arcs.add(new Arc(Province.Q,   Province.NSW));
 		arcs.add(new Arc(Province.NSW, Province.V));
+		
+		arcs.add(new Arc(Province.NT,  Province.WA));
+		arcs.add(new Arc(Province.SA,  Province.WA));
+		arcs.add(new Arc(Province.SA,  Province.NT));
+		arcs.add(new Arc(Province.Q,   Province.NT));
+		arcs.add(new Arc(Province.Q,   Province.SA));
+		arcs.add(new Arc(Province.NSW, Province.SA));
+		arcs.add(new Arc(Province.V,   Province.SA));
+		arcs.add(new Arc(Province.NSW, Province.Q));
+		arcs.add(new Arc(Province.V,   Province.NSW));
+
 		return arcs;
 	}
 	
@@ -130,5 +150,17 @@ public class cspMapColoring extends TestCase {
 		assertEquals(3, domain(Province.NSW).size());
 		assertEquals(3, domain(Province.V).size());
 		assertEquals(3, domain(Province.T).size());
+		
+		assign(Province.NT, Color.Blue);
+		res = algoAc3();
+		assertTrue(res);
+		assertEquals(1, domain(Province.WA).size());
+		assertEquals(1, domain(Province.NT).size());
+		assertEquals(1, domain(Province.SA).size());
+		assertEquals(1, domain(Province.Q).size());
+		assertEquals(1, domain(Province.NSW).size());
+		assertEquals(1, domain(Province.V).size());
+		assertEquals(3, domain(Province.T).size());
+
 	}
 }
