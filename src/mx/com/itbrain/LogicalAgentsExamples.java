@@ -1,10 +1,12 @@
 package mx.com.itbrain;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import junit.framework.TestCase;
-import mx.com.itbrain.LogicalAgentsExamples.KB.Model;
 import mx.com.itbrain.LogicalAgentsExamples.KB.Sentence;
 
 public class LogicalAgentsExamples extends TestCase {
@@ -13,13 +15,9 @@ public class LogicalAgentsExamples extends TestCase {
     
     static class WumpusWorld {
         
-        class WumpusSquare {
-            boolean hasPit = false;
-            boolean hasGold = false;
-            boolean hasWumpus = false;
-        };
-        
         WumpusSquare[][] map;
+        
+        Agent agent;
         
         WumpusWorld() {
             
@@ -49,12 +47,113 @@ public class LogicalAgentsExamples extends TestCase {
                 }
             }
         }
+        
+        public void run(Agent agent) {
+            agent.pos = new GridPos(1, 1);
+            while(true) {
+                Percept percept = perceptAt(agent.pos);
+                Action action   = agent.nextAction(percept);
+                doAction(action, agent);
+            }
+        }
+
+        private void doAction(Action action, Agent agent) {
+            if (action == Action.Up) {
+                if (agent.pos.y + 1 < map.length)
+                    agent.pos.y++;
+            }
+            else if (action == Action.Down) {
+                if (agent.pos.y > 0)
+                    agent.pos.y--;
+            }
+            else if (action == Action.Right) {
+                if (agent.pos.x + 1 < map.length)
+                    agent.pos.x++;                
+            }
+            else if (action == Action.Left) {
+                if (agent.pos.x - 1 > 0)
+                    agent.pos.x--;                
+            }
+        }
+
+        private Percept perceptAt(GridPos agentPos) {
+            List<GridPos> list = neighbors(agentPos);
+            Percept p = new Percept();
+            for(GridPos pos: list ) {
+                WumpusSquare square = squareAt(pos);
+                if (square.hasPit)
+                    p.breeze = true;
+                if (square.hasWumpus)
+                    p.stench = true;
+            }
+            WumpusSquare square = squareAt(agentPos);
+            if (square.hasGold)
+                p.glitter = true;
+            return p;
+        }
+        
+        private WumpusSquare squareAt(GridPos pos) {
+            return map[pos.x][pos.y];
+        }
+
+        private List<GridPos> neighbors(GridPos pos) {
+            List<GridPos> res = new ArrayList<GridPos>();
+            if (pos.x > 0)
+                res.add(new GridPos(pos.x - 1, pos.y));
+            if (pos.y > 0)
+                res.add(new GridPos(pos.x, pos.y - 1));
+            if (pos.x + 1 < map.length)
+                res.add(new GridPos(pos.x + 1, pos.y));
+            if (pos.y + 1 < map[pos.x].length)
+                res.add(new GridPos(pos.x, pos.y + 1));
+            return res;
+        }
+    }
+    
+    static class WumpusSquare {
+        boolean hasPit    = false;
+        boolean hasGold   = false;
+        boolean hasWumpus = false;
+    };
+    
+    static class GridPos {
+        public GridPos(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        int x, y;
+    }
+    
+    static class Percept {
+        boolean stench  = false;
+        boolean breeze  = false;
+        boolean glitter = false;
+        boolean bump    = false;
+        boolean scream  = false;
+    }
+    
+    enum Action {
+        Up, Down, Left, Right, Grab, Shoot, Climb
+    }
+    
+    static abstract class Agent {
+
+        GridPos pos;
+        
+        public abstract Action nextAction(Percept percept);
+  
     }
     
     static class KB {
         
+        List<Sentence> sentences = new ArrayList<Sentence>();
+        
         class Model {
-            HashMap<String, Boolean> values;
+            private HashMap<String, Boolean> values;
+            public boolean isTrue(String name) {
+                return values.get(name);
+            }
         }
     
         interface Sentence {
@@ -81,8 +180,7 @@ public class LogicalAgentsExamples extends TestCase {
 
             @Override
             public boolean isTrue(Model model) {
-                // TODO Auto-generated method stub
-                return false;
+                return model.isTrue(name);
             }
         }
         
@@ -95,8 +193,7 @@ public class LogicalAgentsExamples extends TestCase {
             @Override
             public boolean isTrue(Model model) {
                 return !s.isTrue(null);
-            }
-            
+            }            
         }
         
         static abstract class BinarySentence implements Sentence {
@@ -115,8 +212,7 @@ public class LogicalAgentsExamples extends TestCase {
 
             @Override
             public boolean isTrue(Model model) {
-                // TODO Auto-generated method stub
-                return false;
+                return s1.isTrue(model) && s2.isTrue(model);
             }
         }
         
@@ -127,8 +223,7 @@ public class LogicalAgentsExamples extends TestCase {
 
             @Override
             public boolean isTrue(Model model) {
-                // TODO Auto-generated method stub
-                return false;
+                return s1.isTrue(model) || s2.isTrue(model);
             }
         }
         
@@ -139,25 +234,26 @@ public class LogicalAgentsExamples extends TestCase {
 
             @Override
             public boolean isTrue(Model model) {
-                // TODO Auto-generated method stub
-                return false;
+                if (s1.isTrue(model)) {
+                    return s2.isTrue(model);
+                }
+                return true;
             }            
         }
         
         static class Iff extends BinarySentence {
             public Iff(Sentence s1, Sentence s2) {
-                super(s1, s2);
+                super(new If(s1,s2), new If(s2, s1));
             }
 
             @Override
             public boolean isTrue(Model model) {
-                // TODO Auto-generated method stub
-                return false;
+                return s1.isTrue(model) && s2.isTrue(model);
             }            
         }
         
         void tell(Sentence sentence) {
-            
+            sentences.add(sentence);
         }
 
         public Action makeActionQuery(int time) {
@@ -166,21 +262,13 @@ public class LogicalAgentsExamples extends TestCase {
         }
     }
     
-    class Percept {
+    static class LogicalAgent extends Agent {
         
-    }
-    
-    class Action {
-        
-    }
-    
-    class Agent {
-        
-        KB kb;
+        private KB kb;
         
         int time = 0;
         
-        Action nextAction(Percept percept) {
+        public Action nextAction(Percept percept) {
             kb.tell(makePerceptSentence(percept, time));
             Action action = kb.makeActionQuery(time);
             kb.tell(makeActionSentence(action, time));
@@ -196,5 +284,4 @@ public class LogicalAgentsExamples extends TestCase {
             return null;
         }
     }
-
 }
