@@ -2,6 +2,7 @@ package mx.com.itbrain;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,8 +32,8 @@ public class LogicalAgentsExamples extends TestCase {
             int wumpusPos = rand.nextInt(SIZE * SIZE - 1);
             int goldPos   = rand.nextInt(SIZE * SIZE);
             
-            for(int i = 0; i < SIZE; i++) {
-                for(int j = 0; j < SIZE; j++) {
+            for(int i = 0; i < SIZE - 1; i++) {
+                for(int j = 0; j < SIZE - 1; j++) {
                         
                     map[i][j] = new WumpusSquare();
                     WumpusSquare current = map[i][j];
@@ -224,8 +225,9 @@ public class LogicalAgentsExamples extends TestCase {
 		private boolean ttCheckAll(Sentence alpha, List<Symbol> symbols, Model model) {
 			
 			if (symbols.isEmpty()) {
-				if (isTrue(model))
-					return alpha.isTrue(model);
+				if (isTrue(model)) {
+                    return alpha.isTrue(model);				    
+				}
 				else
 					return true;
 			}
@@ -234,6 +236,7 @@ public class LogicalAgentsExamples extends TestCase {
 				List<Symbol> rest = symbols.subList(1, symbols.size());
 				
 				boolean result = false;
+				
 				model.set(P, true);								
 				if (ttCheckAll(alpha, rest, model)) {
 					model.set(P, false);
@@ -547,13 +550,14 @@ public class LogicalAgentsExamples extends TestCase {
             
             Action action = makeActionQuery();
             
-            System.out.println("going "+action);
+            System.out.println("going "+action+" "+pos);
             
             return action;
         }
 
         private Action makeActionQuery() {
         	List<GridPos> neighbors = WumpusWorld.neighbors(pos);
+        	Collections.shuffle(neighbors);
         	for(GridPos npos : neighbors) {
         		if (kb.query(new Not("P."+npos))) {
         			return move(npos);
