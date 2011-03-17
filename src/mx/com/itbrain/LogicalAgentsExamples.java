@@ -32,8 +32,8 @@ public class LogicalAgentsExamples extends TestCase {
             int wumpusPos = rand.nextInt(SIZE * SIZE - 1);
             int goldPos   = rand.nextInt(SIZE * SIZE);
             
-            for(int i = 0; i < SIZE - 1; i++) {
-                for(int j = 0; j < SIZE - 1; j++) {
+            for(int i = 0; i < SIZE; i++) {
+                for(int j = 0; j < SIZE; j++) {
                         
                     map[i][j] = new WumpusSquare();
                     WumpusSquare current = map[i][j];
@@ -530,8 +530,8 @@ public class LogicalAgentsExamples extends TestCase {
         	
         	kb.tell(new Not("P.0.0"));
         	
-            for(int x = 0; x < WumpusWorld.SIZE; x++) {
-                for(int y = 0; y < WumpusWorld.SIZE; y++) {
+            for(int x = 0; x < WumpusWorld.SIZE - 1; x++) {
+                for(int y = 0; y < WumpusWorld.SIZE - 1; y++) {
                 	GridPos pos = new GridPos(x, y);
                 	List<GridPos> neighbors = WumpusWorld.neighbors( pos );
                 	
