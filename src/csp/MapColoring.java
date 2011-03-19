@@ -1,4 +1,4 @@
-package mx.com.itbrain;
+package csp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-public class cspMapColoring extends TestCase {
+public class MapColoring extends TestCase {
 
     enum Color {
         Red, Green, Blue
