@@ -10,27 +10,28 @@ import java.util.List;
 
 class WumpusWorld {
     	
-    	final static int SIZE = 3;
+    	int size;
         
         WumpusSquare[][] map;
         
         Agent agent;
         
-        WumpusWorld() {
+        WumpusWorld(int gridSize) {
+            this.size = gridSize;
             
-            map = new WumpusSquare[SIZE][SIZE];
+            map = new WumpusSquare[size][size];
             
-            int wumpusPos = LogicalAgentsExamples.rand.nextInt(SIZE * SIZE - 1);
-            int goldPos   = LogicalAgentsExamples.rand.nextInt(SIZE * SIZE);
+            int wumpusPos = LogicalAgentsExamples.rand.nextInt(size * size - 1);
+            int goldPos   = LogicalAgentsExamples.rand.nextInt(size * size);
             
-            for(int i = 0; i < SIZE; i++) {
-                for(int j = 0; j < SIZE; j++) {
+            for(int i = 0; i < size; i++) {
+                for(int j = 0; j < size; j++) {
                         
                     map[i][j] = new WumpusSquare();
                     WumpusSquare current = map[i][j];
                     if (i > 0 && j> 0) {
                         if (wumpusPos == 0) {
-                            current.hasWumpus = true;
+                            // current.hasWumpus = true;
                         }
                         wumpusPos--;
                     }
@@ -50,7 +51,7 @@ class WumpusWorld {
         	
         	int points = 0;
             agent.pos = new GridPos(0, 0);
-            for(int i = 0; i < 50; i++) {
+            for(int i = 0; i < 100; i++) {
             	
             	WumpusSquare currentSquare = squareAt(agent.pos);
             	if (currentSquare.hasPit) {
@@ -75,6 +76,7 @@ class WumpusWorld {
                 System.out.println("going "+action+" "+agent.pos);
                 points--;
             }
+            System.out.println("Chances are over");            
             return points;
         }
 
@@ -118,15 +120,15 @@ class WumpusWorld {
             return map[pos.x][pos.y];
         }
 
-        public static List<GridPos> neighbors(GridPos pos) {
+        public List<GridPos> neighbors(GridPos pos) {
             List<GridPos> res = new ArrayList<GridPos>();
             if (pos.x > 0)
                 res.add(new GridPos(pos.x - 1, pos.y));
             if (pos.y > 0)
                 res.add(new GridPos(pos.x, pos.y - 1));
-            if (pos.x + 1 < SIZE)
+            if (pos.x + 1 < size)
                 res.add(new GridPos(pos.x + 1, pos.y));
-            if (pos.y + 1 < SIZE)
+            if (pos.y + 1 < size)
                 res.add(new GridPos(pos.x, pos.y + 1));
             return res;
         }

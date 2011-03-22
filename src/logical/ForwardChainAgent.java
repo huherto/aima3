@@ -7,15 +7,17 @@ class ForwardChainAgent extends Agent {
     
     private ForwardChainKB kb;
     
-    public ForwardChainAgent() {
+    public ForwardChainAgent(WumpusWorld ww) {
+        super(ww);
         kb = new ForwardChainKB();
         
+        // Panic! this is ignored in FC!
         kb.tell(HornClause.NegFact("P.0.0"));
         
-        for(int x = 0; x < WumpusWorld.SIZE; x++) {
-            for(int y = 0; y < WumpusWorld.SIZE; y++) {
+        for(int x = 0; x < getWorldSize(); x++) {
+            for(int y = 0; y < getWorldSize(); y++) {
                 GridPos pos = new GridPos(x, y);
-                List<GridPos> neighbors = WumpusWorld.neighbors( pos );
+                List<GridPos> neighbors = neighbors( pos );
                 for(GridPos npos : neighbors) {
                     kb.tell(new HornClause("B."+pos,"P."+npos));
                 }
@@ -31,7 +33,7 @@ class ForwardChainAgent extends Agent {
     }
 
     private Action makeActionQuery() {
-        List<GridPos> neighbors = WumpusWorld.neighbors(pos);
+        List<GridPos> neighbors = neighbors(pos);
         Collections.shuffle(neighbors);
         for(GridPos npos : neighbors) {
             if (kb.query("P."+npos)) {
@@ -47,11 +49,16 @@ class ForwardChainAgent extends Agent {
     }
 
     private void makePerceptSentences(Percept percept) {
-        if (percept.breeze || percept.stench) {
+        if (percept.breeze) {
             kb.tell(HornClause.Fact("B."+pos));
         }
         else {
-            kb.tell(HornClause.NegFact("B."+pos));             
+            // Panic! this is ignored in FC!
+            kb.tell(HornClause.NegFact("B."+pos));
+            List<GridPos> neighbors = neighbors(pos);
+            for(GridPos npos : neighbors) {
+                kb.tell(HornClause.NegFact("P"+npos));
+            }
         }
     }
 

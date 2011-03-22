@@ -3,10 +3,18 @@
  */
 package logical;
 
+import java.util.List;
+
 
 abstract class Agent {
 
+    WumpusWorld ww;
+    
     GridPos pos;
+    
+    public Agent(WumpusWorld ww) {
+        this.ww = ww;
+    }
     
     public abstract Action nextAction(Percept percept);
     
@@ -28,5 +36,12 @@ abstract class Agent {
         throw new IllegalStateException();
     }
 
+    public int getWorldSize() {
+        return ww.size;
+    }
+    
+    public List<GridPos> neighbors(GridPos gpos) {
+        return ww.neighbors(gpos);
+    }
 
 }

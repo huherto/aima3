@@ -56,6 +56,10 @@ public class HornClause extends Sentence {
         set.addAll(body);
         return set;
     }
+    
+    Set<Symbol> symbolsOnBody() {
+        return new HashSet<Symbol>(body);
+    }
 
     @Override
     protected String makeString() {
@@ -67,6 +71,10 @@ public class HornClause extends Sentence {
         }
         str.append(" => ").append(head);
         return str.toString();
+    }
+
+    public boolean isFact() {
+        return (body.size() == 1 && body.contains(new True()));
     }
 
 }
