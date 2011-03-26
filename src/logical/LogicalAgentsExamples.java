@@ -71,13 +71,13 @@ public class LogicalAgentsExamples extends TestCase {
         });
     }
     
-    public void testRationalAgent() {    	
+    public void testSimpleRiskAwareAgent() {    	
         	
-        run(500, 4, new AgentFactory() {
+        run(100, 4, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {
-                return new RationalAgent(ww);
+                return new SimpleRiskAwareAgent(ww);
             }
             
         });

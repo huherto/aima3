@@ -30,7 +30,8 @@ public class BasicBayesTest extends TestCase {
         return 1;
     }
 
-    class Tuple extends LinkedList<Variable>{
+    @SuppressWarnings("serial")
+	class Tuple extends LinkedList<Variable>{
         
         double prob = 0;
 

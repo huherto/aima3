@@ -6,9 +6,7 @@ package logical;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-class WumpusWorld {
+public class WumpusWorld {
     	
     	int size;
         
@@ -57,6 +55,7 @@ class WumpusWorld {
             	if (currentSquare.hasPit) {
             		points -= 1000;
             		System.out.println("Agent fell in the pit");
+            		//throw new RuntimeException("Agent fell in the pit");
             		return points;
             	}
             	if (currentSquare.hasWumpus) {

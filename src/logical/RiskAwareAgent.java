@@ -1,14 +1,17 @@
 package logical;
 
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 
-public class RationalAgent extends Agent {
+import logical.ObservedWorld.Square;
+
+public abstract class RiskAwareAgent extends Agent {
 
     
     ObservedWorld oWorld;
     
-    public RationalAgent(WumpusWorld ww) {
+    public RiskAwareAgent(WumpusWorld ww) {
         super(ww);
         oWorld = new ObservedWorld(ww.size);
     }
@@ -20,6 +23,8 @@ public class RationalAgent extends Agent {
         current.observed = true;
         current.breeze = percept.breeze;
                 
+//        print(System.out);
+        
         List<GridPos> observedNeighbors = oWorld.observed(neighbors(pos));        
     	Collections.shuffle(observedNeighbors);
         
@@ -36,7 +41,7 @@ public class RationalAgent extends Agent {
         	// Move to the neighbor that gets me closer.
             GridPos closestNeighbor = closest(closest, observedNeighbors);
             if (closestNeighbor != null) {
-            	System.out.println("Get closer to a safe square");
+            	System.out.println("Get closer to a safe square "+closest);
             	return getMoveDir(closestNeighbor);
             }
         }
@@ -50,7 +55,7 @@ public class RationalAgent extends Agent {
     	// Move to the neighbor that gets me closer.
         GridPos closestNeighbor = closest(minRiskPos, observedNeighbors);
         if (closestNeighbor != null) {
-        	System.out.println("Get closer to a minRisk square");
+        	System.out.println("Get closer to a minRisk square "+minRiskPos);
         	return getMoveDir(closestNeighbor);
         }
         
@@ -97,21 +102,30 @@ public class RationalAgent extends Agent {
 	}
 	
 	// Calculate the risk of this square.
-    private double risk(GridPos gpos) {
-        double risk = 0;
-        List<GridPos> nbors = neighbors(gpos);
-        for(GridPos npos : nbors ) {
-            if (oWorld.at(npos).observed) {
-                if (oWorld.at(npos).breeze)
-                    risk += 1 / neighbors(npos).size();
-                else 
-                    return 0;
-            }      
-            else {
-                risk += .20 / nbors.size();
-            }
-        }
-        return risk;
+    public abstract double risk(GridPos gpos);
+    
+    public void print(PrintStream out) {
+    	List<GridPos> frontier = oWorld.frontier();
+    	for(int y = oWorld.size - 1; y >= 0; y--) {
+    		out.printf("%2d ", y);
+        	for(int x = 0; x < oWorld.size; x++) {
+        		Square square = oWorld.at(x, y);
+        		if (square.observed) {
+        			if (square.breeze) {
+        				out.print(" B ");
+        			}
+        			else {
+        				 out.print("   ");
+        			}
+        		}
+        		else if (frontier.contains(new GridPos(x, y))) {
+        			out.print(" F ");
+        		}
+        		else {
+        			out.print(" X ");
+        		}
+        	}    		
+        	out.println();
+    	}
     }
-
 }
