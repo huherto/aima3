@@ -5,114 +5,101 @@ import java.util.List;
 
 public class RationalAgent extends Agent {
 
-    class Square {
-        boolean observed = false;
-        boolean breeze = false;
-    };
     
-    class ObservedWorld {
-        Square map[][];
-        
-        int size;
-        
-        public ObservedWorld(int size) {
-            this.size = size;
-            map = new Square[size][size];
-                        
-            for(int i = 0; i < size; i++) {
-                for(int j = 0; j < size; j++) {
-                    map[i][j] = new Square();
-                }
-            }
-        }
-
-        public Square at(GridPos pos) {
-            return map[pos.x][pos.y];
-        }
-    }
-    
-    private ObservedWorld oWorld;
+    ObservedWorld oWorld;
     
     public RationalAgent(WumpusWorld ww) {
         super(ww);
         oWorld = new ObservedWorld(ww.size);
     }
 
-    @Override
+	@Override
     public Action nextAction(Percept percept) {
         // Update the observed world.
-        Square current = oWorld.at(pos);        
+        ObservedWorld.Square current = oWorld.at(pos);        
         current.observed = true;
         current.breeze = percept.breeze;
+                
+        List<GridPos> observedNeighbors = oWorld.observed(neighbors(pos));        
+    	Collections.shuffle(observedNeighbors);
         
-        List<GridPos> nbors = neighbors(pos);
-        Collections.shuffle(nbors);
-        for(GridPos npos: nbors) {
-            if (!oWorld.at(npos).observed && isSafe(npos)) {
-                System.out.println("Safe move");
-                return getMoveDir(npos);
+        // Which is the closest safe square in the frontier?
+        List<GridPos> safe = oWorld.safe(oWorld.frontier());
+        GridPos closest = closest(pos, safe);
+        if (closest != null) {
+        	
+        	if (estimateDistance(closest, pos) == 1) {
+            	System.out.println("Neighbor is safe");
+            	return getMoveDir(closest);        		
+        	}
+        	
+        	// Move to the neighbor that gets me closer.
+            GridPos closestNeighbor = closest(closest, observedNeighbors);
+            if (closestNeighbor != null) {
+            	System.out.println("Get closer to a safe square");
+            	return getMoveDir(closestNeighbor);
             }
         }
         
-        if (thereIsSafe()) {
-            for(GridPos npos: nbors) {
-                if (oWorld.at(npos).observed) {
-                    System.out.println("Coward move");
-                    return getMoveDir(npos);
-                }
-            }
-        }
-    
-        GridPos minRiskPos = null;
-        double minRisk = 100;
-        for(GridPos npos: nbors) {
-            if (!oWorld.at(npos).observed) {                
-                double risk = risk(npos);
-                if (risk < minRisk) {
-                    minRisk = risk;
-                    minRiskPos = npos;
-                }
-            }
+        GridPos minRiskPos = minRisk(oWorld.frontier());
+    	if (estimateDistance(minRiskPos, pos) == 1) {
+        	System.out.println("Neighbor is minRisk");
+        	return getMoveDir(minRiskPos);        		
+    	}
+    	
+    	// Move to the neighbor that gets me closer.
+        GridPos closestNeighbor = closest(minRiskPos, observedNeighbors);
+        if (closestNeighbor != null) {
+        	System.out.println("Get closer to a minRisk square");
+        	return getMoveDir(closestNeighbor);
         }
         
-        if (minRisk < .5) {
-            System.out.println("Risky move "+minRisk);
-            return getMoveDir(minRiskPos);            
+        if (observedNeighbors.size() > 0) {
+        	System.out.println("Coward move");
+        	return getMoveDir(observedNeighbors.get(0));
         }
         
-        for(GridPos npos: nbors) {
-            if (oWorld.at(npos).observed) {
-                System.out.println("Coward move");
-                return getMoveDir(npos);
-            }
-        }
-        
-        return getMoveDir(nbors.get(0));
+        minRiskPos = minRisk(neighbors(pos));
+    	System.out.println("Kamikaze move");
+        return getMoveDir(minRiskPos);
     }
+	
+    private int estimateDistance(GridPos pos, GridPos gpos) {
+		return Math.abs(pos.x - gpos.x) + Math.abs(pos.y - gpos.y);
+	}
+    
+    // Choose the element in the list closest to pos.
+	private GridPos closest(GridPos pos, List<GridPos> list) {
+        int minDistance = 2 * oWorld.size;
+        GridPos closest = null;
+        for(GridPos gpos: list) {
+    		int distance = estimateDistance(pos, gpos);
+    		if (closest == null || distance < minDistance) {
+    			minDistance = distance;
+    			closest = gpos;
+    		}
+        }
+        return closest;
+	}
 
-    private boolean thereIsSafe() {
-        for(int i = 0; i < ww.size; i++) {
-            for(int j = 0; j < ww.size; j++) {
-                if (isSafe(new GridPos(i, j)))
-                    return true;
-            }
+    // Choose the element in the list with the minimum risk.
+	private GridPos minRisk(List<GridPos> list) {
+        double minRisk = 1;
+        GridPos minRiskPos = null;
+        for(GridPos gpos: list) {
+    		double risk = risk(gpos);
+    		if (minRiskPos == null || risk < minRisk) {
+    			minRisk = risk;
+    			minRiskPos = gpos;
+    		}
         }
-        return false;
-    }
-    
-    private boolean isSafe(GridPos gpos) {
-        List<GridPos> nbors = neighbors(gpos);
-        for(GridPos npos : nbors ) {
-            if (oWorld.at(npos).observed && !oWorld.at(npos).breeze)
-                return true;
-        }
-        return false;
-    }
-    
+        return minRiskPos;
+	}
+	
+	// Calculate the risk of this square.
     private double risk(GridPos gpos) {
         double risk = 0;
         List<GridPos> nbors = neighbors(gpos);
-        int numNbors = nbors.size();
         for(GridPos npos : nbors ) {
             if (oWorld.at(npos).observed) {
                 if (oWorld.at(npos).breeze)
@@ -121,7 +108,7 @@ public class RationalAgent extends Agent {
                     return 0;
             }      
             else {
-                risk += .20 / numNbors;
+                risk += .20 / nbors.size();
             }
         }
         return risk;

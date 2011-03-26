@@ -71,7 +71,8 @@ public class LogicalAgentsExamples extends TestCase {
         });
     }
     
-    public void testImprovedAgent() {
+    public void testRationalAgent() {    	
+        	
         run(500, 4, new AgentFactory() {
 
             @Override
@@ -80,6 +81,25 @@ public class LogicalAgentsExamples extends TestCase {
             }
             
         });
+    }
+    
+    public void testObservedWorld() {
+    	ObservedWorld ow = new ObservedWorld(4);
+    	assertEquals(16, ow.allSquares().size());
+    	assertEquals(0, ow.observed(ow.allSquares()).size());
+    	assertEquals(0, ow.frontier().size());
+    	
+    	ow.at(0, 0).observed = true;
+    	assertEquals(1, ow.observed(ow.allSquares()).size());
+    	assertEquals(2, ow.frontier().size());
+    	
+    	assertTrue(ow.isSafe(new GridPos(0,1)));
+    	ow.at(0, 0).breeze = true;
+    	assertFalse(ow.isSafe(new GridPos(0,1)));
+    	
+    	assertEquals(3, ow.neighbors(new GridPos(0, 1)).size());
+    	ow.at(0, 1).observed = true;
+    	assertEquals(3, ow.frontier().size());
     }
     
 }
