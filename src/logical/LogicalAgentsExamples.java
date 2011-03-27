@@ -3,6 +3,8 @@ package logical;
 
 import java.util.Random;
 
+import uncertainty.BayesianAgent;
+
 import junit.framework.TestCase;
 
 public class LogicalAgentsExamples extends TestCase {
@@ -78,6 +80,18 @@ public class LogicalAgentsExamples extends TestCase {
             @Override
             public Agent create(WumpusWorld ww) {
                 return new SimpleRiskAwareAgent(ww);
+            }
+            
+        });
+    }
+    
+    public void testBayesianAgent() {    	
+    	
+        run(1000, 4, new AgentFactory() {
+
+            @Override
+            public Agent create(WumpusWorld ww) {
+                return new BayesianAgent(ww);
             }
             
         });

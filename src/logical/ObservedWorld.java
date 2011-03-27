@@ -10,8 +10,8 @@ import java.util.List;
 public class ObservedWorld {
 	
     public class Square {
-        boolean observed = false;
-        boolean breeze = false;
+        public boolean observed = false;
+        public boolean breeze = false;
     };
 
 	Square map[][];

@@ -8,8 +8,7 @@ import logical.ObservedWorld.Square;
 
 public abstract class RiskAwareAgent extends Agent {
 
-    
-    ObservedWorld oWorld;
+    protected ObservedWorld oWorld;
     
     public RiskAwareAgent(WumpusWorld ww) {
         super(ww);
