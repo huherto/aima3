@@ -12,6 +12,6 @@ public class BayesianAgent extends RiskAwareAgent {
 		
 	@Override
 	public double risk(GridPos gpos) {
-	    return FrontierModel.calcProbPit(oWorld, gpos);
+		return FrontierModel.calcProb(oWorld, gpos);
 	}
 }
