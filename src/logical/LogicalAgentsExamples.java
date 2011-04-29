@@ -41,7 +41,7 @@ public class LogicalAgentsExamples extends TestCase {
     }
     
     public void testStupidAgent() {
-        run(200, 4, new AgentFactory() {
+        run(10000, 4, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {
@@ -63,7 +63,7 @@ public class LogicalAgentsExamples extends TestCase {
     }
     
     public void testFCAgent() {
-        run(200, 4, new AgentFactory() {
+        run(10000, 4, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {
@@ -75,7 +75,7 @@ public class LogicalAgentsExamples extends TestCase {
     
     public void testSimpleRiskAwareAgent() {    	
         	
-        run(100, 4, new AgentFactory() {
+        run(10000, 4, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {
@@ -87,7 +87,7 @@ public class LogicalAgentsExamples extends TestCase {
     
     public void testBayesianAgent() {    	
     	
-        run(1000, 4, new AgentFactory() {
+        run(10000, 4, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {

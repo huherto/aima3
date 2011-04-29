@@ -24,64 +24,49 @@ public abstract class RiskAwareAgent extends Agent {
                 
 //        print(System.out);
         
-        List<GridPos> observedNeighbors = oWorld.observed(neighbors(pos));        
-    	Collections.shuffle(observedNeighbors);
-        
-        // Which is the closest safe square in the frontier?
-        List<GridPos> safe = oWorld.safe(oWorld.frontier());
-        GridPos closest = closest(pos, safe);
-        if (closest != null) {
-        	
-        	if (estimateDistance(closest, pos) == 1) {
-            	System.out.println("Neighbor is safe");
-            	return getMoveDir(closest);        		
-        	}
-        	
-        	// Move to the neighbor that gets me closer.
-            GridPos closestNeighbor = closest(closest, observedNeighbors);
-            if (closestNeighbor != null) {
-            	System.out.println("Get closer to a safe square "+closest);
-            	return getMoveDir(closestNeighbor);
-            }
-        }
-        
-        GridPos minRiskPos = minRisk(oWorld.frontier());
-    	if (estimateDistance(minRiskPos, pos) == 1) {
-        	System.out.println("Neighbor is minRisk");
-        	return getMoveDir(minRiskPos);        		
-    	}
-    	
-    	// Move to the neighbor that gets me closer.
-        GridPos closestNeighbor = closest(minRiskPos, observedNeighbors);
-        if (closestNeighbor != null) {
-        	System.out.println("Get closer to a minRisk square "+minRiskPos);
-        	return getMoveDir(closestNeighbor);
-        }
-        
-        if (observedNeighbors.size() > 0) {
-        	System.out.println("Coward move");
-        	return getMoveDir(observedNeighbors.get(0));
-        }
-        
-        minRiskPos = minRisk(neighbors(pos));
-    	System.out.println("Kamikaze move");
-        return getMoveDir(minRiskPos);
+        List<GridPos> frontier = oWorld.frontier();
+        GridPos minRiskPos = minRisk(frontier);
+        return getCloserTo(minRiskPos);
     }
 	
-    private int estimateDistance(GridPos pos, GridPos gpos) {
+    private Action getCloserTo(GridPos targetPos) {
+
+    	if (estimateDistance(targetPos, pos) == 1) {
+           	return getMoveDir(targetPos);    		
+    	}
+    	
+    	List<GridPos> observedNeighbors = oWorld.observed(neighbors(pos));        
+    	
+    	// Move to the neighbor that gets me closer.
+        GridPos closestNeighbor = closest(targetPos, observedNeighbors);
+       	System.out.println("Get closer to square "+targetPos);
+       	return getMoveDir(closestNeighbor);
+	}
+
+	private int estimateDistance(GridPos pos, GridPos gpos) {
 		return Math.abs(pos.x - gpos.x) + Math.abs(pos.y - gpos.y);
 	}
     
-    // Choose the element in the list closest to pos.
-	private GridPos closest(GridPos pos, List<GridPos> list) {
+    // Find the element in the list closest to pos.
+	private GridPos closest(GridPos targetPos, List<GridPos> list) {
+		
+		if (list.isEmpty()) {
+			throw new RuntimeException("list shouldn't be empty");
+		}
+		
+    	Collections.shuffle(list);
+    	
         int minDistance = 2 * oWorld.size;
         GridPos closest = null;
         for(GridPos gpos: list) {
-    		int distance = estimateDistance(pos, gpos);
+    		int distance = estimateDistance(targetPos, gpos);
     		if (closest == null || distance < minDistance) {
     			minDistance = distance;
     			closest = gpos;
     		}
+        }
+        if (closest == null) {
+        	throw new RuntimeException("Cannot find element");
         }
         return closest;
 	}

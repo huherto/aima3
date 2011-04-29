@@ -11,6 +11,10 @@ public class SimpleRiskAwareAgent extends RiskAwareAgent {
 
 	// Calculate the risk of this square.
     public double risk(GridPos gpos) {
+    	
+    	if (oWorld.isSafe(gpos))
+    		return 0;
+    	
         double risk = 0;
         List<GridPos> nbors = neighbors(gpos);
         for(GridPos npos : nbors ) {
