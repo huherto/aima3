@@ -2,17 +2,15 @@ package csp;
 
 import java.util.List;
 
-import csp.MapColoring.Value;
-import csp.MapColoring.Variable;
 
 class OptBacktrackAlg extends BaseBacktrackAlg {
     
     @Override
-    Variable selectUnassignedVariable(Assignment assignment) {
+    Variable selectUnassignedVariable(ConstraintSatisfactionProblem csp, Assignment assignment) {
         
         int min = Integer.MAX_VALUE;
         Variable minVar = null;
-        for (Variable var : Variable.values()) {
+        for (Variable var : csp.variables()) {
             if (assignment.get(var) == null) {
                 int size = assignment.domain(var).size(); 
                 if (size < min) {
@@ -27,13 +25,13 @@ class OptBacktrackAlg extends BaseBacktrackAlg {
     }
     
     @Override
-    List<Inference> findInferences(Assignment assignment) {
-        List<Inference> res = super.findInferences(assignment);
+    List<Inference> findInferences(ConstraintSatisfactionProblem csp, Assignment assignment) {
+        List<Inference> res = super.findInferences(csp, assignment);
         if (res == null)
             return null; // failed.
         
         // Forward checking.
-        for(Arc arc : MapColoring.allArcs()) {
+        for(Arc arc : csp.allArcs()) {
             Value var1 = assignment.get(arc.first);
             if (var1 != null) {
                 if (assignment.domain(arc.second).contains(var1)) {

@@ -1,7 +1,5 @@
 package csp;
 
-import csp.MapColoring.Value;
-import csp.MapColoring.Variable;
 
 class NotInDomain implements Inference {
     

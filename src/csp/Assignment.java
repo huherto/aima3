@@ -5,52 +5,52 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import csp.MapColoring.Value;
-import csp.MapColoring.Variable;
 
 class Assignment {
     Map<Variable, Value> vars = new HashMap<Variable, Value>();
     Map<Variable, Domain> domains = new HashMap<Variable, Domain>();
     List<Variable> ordered = new LinkedList<Variable>();
-
-    public Assignment() {
-        for (Variable p : Variable.values()) {
-            domains.put(p, Domain.fullDomain());
+    
+    public Assignment(ConstraintSatisfactionProblem csp) {
+        for (Variable var: csp.variables()) {
+            Domain nd = new Domain();
+            nd.addAll(var.getDomain());
+            domains.put(var, nd);
         }
     }
 
-    public Domain domain(Variable prov) {
-        return domains.get(prov);
+    public Domain domain(Variable var) {
+        return domains.get(var);
     }
     
-    public void setDomain(Variable prov, Value color) {
-        Domain d = domains.get(prov);
-        d.retainAll(null);
-        d.add(color);
+    public void setDomain(Variable var, Value value) {
+        Domain d = domains.get(var);
+        d.clear();
+        d.add(value);
     }
 
-    public void domainRemove(Variable prov, Value color) {
-        Domain d = domains.get(prov);
-        d.remove(color);
+    public void domainRemove(Variable var, Value value) {
+        Domain d = domains.get(var);
+        d.remove(value);
     }
 
-    public void domainAdd(Variable prov, Value color) {
-        Domain d = domains.get(prov);
-        d.add(color);
+    public void domainAdd(Variable var, Value value) {
+        Domain d = domains.get(var);
+        d.add(value);
     }
     
-    public void add(Variable prov, Value color) {
-        vars.put(prov, color);
-        ordered.add(prov);
+    public void add(Variable var, Value value) {
+        vars.put(var, value);
+        ordered.add(var);
     }
 
-    public Value get(Variable prov) {
-        return vars.get(prov);
+    public Value get(Variable var) {
+        return vars.get(var);
     }
 
-    public void remove(Variable prov, Value color) {
-        vars.remove(prov);
-        ordered.remove(prov);
+    public void remove(Variable var, Value value) {
+        vars.remove(var);
+        ordered.remove(var);
     }
 
     public boolean isComplete() {

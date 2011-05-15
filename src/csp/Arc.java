@@ -1,6 +1,5 @@
 package csp;
 
-import csp.MapColoring.Variable;
 
 class Arc {
     Variable first;
