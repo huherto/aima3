@@ -1,16 +1,19 @@
 package csp;
 
 
-class Arc {
+abstract class Arc {
     Variable first;
     Variable second;
 
-    public Arc(Variable p1, Variable p2) {
-        first = p1;
-        second = p2;
+    public Arc(Variable var1, Variable var2) {
+        first = var1;
+        second = var2;
     }
 
     public String toString() {
         return "(" + first + "," + second + ")";
     }
+    
+    public abstract boolean allowed(Value v1, Value v2);
+    
 }

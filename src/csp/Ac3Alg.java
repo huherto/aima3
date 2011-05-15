@@ -9,7 +9,7 @@ public class Ac3Alg {
         List<Arc> queue = csp.allArcs();
         while (!queue.isEmpty()) {
             Arc arc = queue.remove(0);
-            if (revise(assignment, arc.first, arc.second)) {
+            if (revise(assignment, arc)) {
                 if (assignment.domain(arc.first).isEmpty()) {
                     return false;
                 }
@@ -25,19 +25,20 @@ public class Ac3Alg {
         return true;
     }
 
-    private boolean revise(Assignment assignment, Variable first,
-            Variable second) {
+    private boolean revise(Assignment assignment, Arc arc) {
         boolean revised = false;
-        Domain domainFirst = assignment.domain(first);
-        Domain domainSecond = assignment.domain(second);
+        Domain domainFirst  = assignment.domain(arc.first);
+        Domain domainSecond = assignment.domain(arc.second);
 
         Iterator<Value> iter = domainFirst.iterator();
         while (iter.hasNext()) {
-            Value valueFirst = iter.next();
+            Value v1 = iter.next();
             boolean allowed = false;
-            for (Value valueSecond : domainSecond) {
-                if (valueFirst != valueSecond)
+            for (Value v2 : domainSecond) {
+                if (arc.allowed(v1, v2)) {
                     allowed = true;
+                    break;
+                }
             }
             if (!allowed) {
                 iter.remove();

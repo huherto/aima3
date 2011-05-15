@@ -10,8 +10,10 @@ class Assignment {
     Map<Variable, Value> vars = new HashMap<Variable, Value>();
     Map<Variable, Domain> domains = new HashMap<Variable, Domain>();
     List<Variable> ordered = new LinkedList<Variable>();
+    int numVariables; // Number of variables to be assigned.
     
     public Assignment(ConstraintSatisfactionProblem csp) {
+        numVariables = csp.variables().size();
         for (Variable var: csp.variables()) {
             Domain nd = new Domain();
             nd.addAll(var.getDomain());
@@ -54,7 +56,7 @@ class Assignment {
     }
 
     public boolean isComplete() {
-        return vars.size() == 7;
+        return vars.size() == numVariables;
     }
 
     public void add(List<Inference> inferences) {
@@ -67,14 +69,6 @@ class Assignment {
         for (Inference infe : inferences) {
             infe.remove(this);
         }
-    }
-
-    public boolean sameColor(Variable p1, Variable p2) {
-        Value c1 = vars.get(p1);
-        if (c1 == null)
-            return false;
-        Value c2 = vars.get(p2);
-        return c1.equals(c2);
     }
 
     public String toString() {

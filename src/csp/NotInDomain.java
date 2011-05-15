@@ -3,21 +3,21 @@ package csp;
 
 class NotInDomain implements Inference {
     
-    Variable prov;
-    Value color;
+    private Variable var;
+    private Value value;
     
-    public NotInDomain(Variable p, Value c) {
-        prov = p;
-        color = c;
+    public NotInDomain(Variable var, Value value) {
+        this.var = var;
+        this.value = value;
     }
     
     @Override
     public void add(Assignment assignment) {
-        assignment.domainRemove(prov, color);
+        assignment.domainRemove(var, value);
     }
 
     @Override
     public void remove(Assignment assignment) {
-        assignment.domainAdd(prov, color);
+        assignment.domainAdd(var, value);
     }        
 }

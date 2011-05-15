@@ -19,7 +19,9 @@ class BaseBacktrackAlg {
 
     List<Inference> findInferences(ConstraintSatisfactionProblem csp, Assignment assignment) {
         for (Arc arc : csp.allArcs()) {
-            if (assignment.sameColor(arc.first, arc.second))
+            Value v1 = assignment.get(arc.first);
+            Value v2 = assignment.get(arc.second);
+            if (v1 != null && !arc.allowed(v1, v2))
                 return null;
         }
         return new ArrayList<Inference>();
