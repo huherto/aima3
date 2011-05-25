@@ -5,7 +5,7 @@ import java.util.List;
 
 
 class BaseBacktrackAlg {
-    Variable selectUnassignedVariable(ConstraintSatisfactionProblem csp, Assignment assignment) {
+    protected Variable selectUnassignedVariable(ConstraintSatisfactionProblem csp, Assignment assignment) {
         for (Variable var : csp.variables()) {
             if (assignment.get(var) == null)
                 return var;
@@ -13,11 +13,11 @@ class BaseBacktrackAlg {
         throw new IllegalAccessError();
     }
 
-    List<Value> orderDomainValues(Assignment assignment, Variable var) {
+    protected List<Value> orderDomainValues(Assignment assignment, Variable var) {
         return new ArrayList<Value>(assignment.domain(var));
     }
 
-    List<Inference> findInferences(ConstraintSatisfactionProblem csp, Assignment assignment) {
+    protected List<Inference> findInferences(ConstraintSatisfactionProblem csp, Assignment assignment) {
         for (Arc arc : csp.allArcs()) {
             Value v1 = assignment.get(arc.first);
             Value v2 = assignment.get(arc.second);
@@ -27,13 +27,13 @@ class BaseBacktrackAlg {
         return new ArrayList<Inference>();
     }
 
-    Assignment backtrack(ConstraintSatisfactionProblem csp, Assignment assignment) {
+    protected Assignment backtrack(ConstraintSatisfactionProblem csp, Assignment assignment) {
         // System.out.println(assignment);
         if (assignment.isComplete())
             return assignment;
         Variable var = selectUnassignedVariable(csp, assignment);
         for (Value value : orderDomainValues(assignment, var)) {
-            System.out.println(assignment);
+//            System.out.println(assignment);
             assignment.add(var, value);
             List<Inference> inferences = findInferences(csp, assignment);
             if (inferences != null) {
@@ -48,7 +48,7 @@ class BaseBacktrackAlg {
         return null; // failure.
     }
 
-    Assignment execute(ConstraintSatisfactionProblem csp) {
+    protected Assignment execute(ConstraintSatisfactionProblem csp) {
         Assignment result = backtrack(csp, new Assignment(csp));
         System.out.println(result);
         return result;

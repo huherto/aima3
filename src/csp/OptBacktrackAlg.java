@@ -6,7 +6,7 @@ import java.util.List;
 class OptBacktrackAlg extends BaseBacktrackAlg {
     
     @Override
-    Variable selectUnassignedVariable(ConstraintSatisfactionProblem csp, Assignment assignment) {
+    protected Variable selectUnassignedVariable(ConstraintSatisfactionProblem csp, Assignment assignment) {
         
         int min = Integer.MAX_VALUE;
         Variable minVar = null;
@@ -25,7 +25,7 @@ class OptBacktrackAlg extends BaseBacktrackAlg {
     }
     
     @Override
-    List<Inference> findInferences(ConstraintSatisfactionProblem csp, Assignment assignment) {
+    protected List<Inference> findInferences(ConstraintSatisfactionProblem csp, Assignment assignment) {
         List<Inference> res = super.findInferences(csp, assignment);
         if (res == null)
             return null; // failed.
