@@ -52,7 +52,7 @@ public class LogicalAgentsExamples extends TestCase {
     }
     
     public void testTTAgent() {
-        run(100, 3, new AgentFactory() {
+        run(10, 3, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {

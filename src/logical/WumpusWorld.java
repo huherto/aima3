@@ -20,27 +20,27 @@ public class WumpusWorld {
             map = new WumpusSquare[size][size];
             
             int wumpusPos = LogicalAgentsExamples.rand.nextInt(size * size - 1);
-            int goldPos   = LogicalAgentsExamples.rand.nextInt(size * size);
+            int goldPos   = LogicalAgentsExamples.rand.nextInt(size * size - 1) + 1;
             
             for(int i = 0; i < size; i++) {
                 for(int j = 0; j < size; j++) {
                         
                     map[i][j] = new WumpusSquare();
                     WumpusSquare current = map[i][j];
-                    if (i > 0 && j> 0) {
+                    if (i > 0 && j > 0) {
                         if (wumpusPos == 0) {
                             // current.hasWumpus = true;
                         }
                         wumpusPos--;
+                        if (LogicalAgentsExamples.rand.nextInt(5) == 0) {
+                            current.hasPit = true;
+                        }
                     }
                     if (goldPos == 0) {
                         current.hasGold = true;
                         System.out.println("Gold is in " + new GridPos(i, j));
                     }
                     goldPos--;
-                    if (LogicalAgentsExamples.rand.nextInt(5) == 0) {
-                        current.hasPit = true;
-                    }
                 }
             }
         }
@@ -49,7 +49,7 @@ public class WumpusWorld {
         	
         	int points = 0;
             agent.pos = new GridPos(0, 0);
-            for(int i = 0; i < 100; i++) {
+            for(int i = 0; i < 50; i++) {
             	
             	WumpusSquare currentSquare = squareAt(agent.pos);
             	if (currentSquare.hasPit) {
