@@ -14,6 +14,8 @@ public class ForwardChainTest extends TestCase {
         kb.tell(HornClause.Fact("A"));
         kb.tell(HornClause.Fact("B"));
         
+        assertTrue(kb.entails(new Symbol("A")));
+        assertTrue(kb.entails(new Symbol("B")));
         assertTrue(kb.entails(new Symbol("L")));
         assertTrue(kb.entails(new Symbol("M")));
         assertTrue(kb.entails(new Symbol("P")));
@@ -21,6 +23,11 @@ public class ForwardChainTest extends TestCase {
         
         kb.tell(new HornClause("Q", "P"));
         assertTrue(kb.entails(new Symbol("Q")));
+        
+        assertFalse(kb.entails(new Symbol("C")));
+        kb.tell(new HornClause("C", "A", "B"));
+        assertTrue(kb.entails(new Symbol("C")));
+        
     }
 
 }
