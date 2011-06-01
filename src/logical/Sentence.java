@@ -8,6 +8,15 @@ import java.util.Set;
 
 abstract class Sentence {
     
+    protected static String paren(Sentence s) {
+        if (s instanceof Not || s instanceof Symbol) {
+            return s.toString();
+        }
+        else {
+            return "(" + s + ")";
+        }
+    }
+
     private String str;
     
     abstract boolean isTrue(Model model);
@@ -39,5 +48,7 @@ abstract class Sentence {
 	}
 
     protected abstract String makeString();
-
+    
+    public abstract Sentence toCnf();
+    
 }

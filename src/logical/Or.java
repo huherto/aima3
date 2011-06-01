@@ -5,6 +5,7 @@ package logical;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -45,9 +46,29 @@ class Or extends Sentence {
 		for(Sentence s : sList) {
 			if (str.length() > 0)
 				str.append(" or ");
-			str.append(s.toString());
+			str.append(paren(s));
 		}
 		
-		return "(" + str + ")";
+		return str.toString();
 	}
+
+    public List<Sentence> disjuncts() {
+        return sList; 
+    }
+    
+    @Override
+    public Sentence toCnf() {
+        List<Sentence> disjuncts = new LinkedList<Sentence>();
+        for(Sentence s: sList) {
+            Sentence cnf = s.toCnf();
+            if (cnf instanceof Or) {
+                disjuncts.addAll(((Or)cnf).disjuncts());
+            }
+            else {
+                disjuncts.add(cnf);
+            }
+        }
+        return new Or(disjuncts.toArray(new Sentence[disjuncts.size()]));
+    }
+   
 }

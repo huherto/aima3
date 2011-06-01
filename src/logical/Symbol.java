@@ -30,4 +30,9 @@ class Symbol extends Sentence {
 		return name;
 	}
 
+    @Override
+    public Sentence toCnf() {
+        return this;
+    }
+
 }

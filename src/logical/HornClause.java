@@ -77,4 +77,9 @@ public class HornClause extends Sentence {
         return (body.size() == 1 && body.contains(new True()));
     }
 
+    @Override
+    public Sentence toCnf() {
+        throw new RuntimeException("Not implemented");
+    }
+
 }

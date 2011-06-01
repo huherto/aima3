@@ -15,6 +15,13 @@ class Iff extends BinarySentence {
     }            
     
 	public String makeString() {
-		return s1+"<=>"+s2;
+		return paren(s1) + " <=> " + paren(s2);
 	}
+
+    @Override
+    public Sentence toCnf() {        
+        Sentence s1 = this.s1.toCnf();
+        Sentence s2 = this.s2.toCnf();        
+        return new And(new If(s1, s2).toCnf(), new If(s2, s1).toCnf());
+    }
 }

@@ -5,6 +5,7 @@ package logical;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -41,14 +42,33 @@ class And extends Sentence {
 		return res;
 	}
 	
+	public List<Sentence> conjuncts() {
+	    return sList;
+	}
+	
 	public String makeString() {
 		StringBuilder str = new StringBuilder();
 		for(Sentence s : sList) {
 			if (str.length() > 0)
 				str.append(" and ");
-			str.append(s.toString());
+			str.append(paren(s));
 		}
 		
-		return "(" + str + ")";
+		return str.toString();
 	}
+
+    @Override
+    public Sentence toCnf() {
+        List<Sentence> conjunts = new LinkedList<Sentence>();
+        for(Sentence s: sList) {
+            Sentence cnf = s.toCnf();
+            if (cnf instanceof And) {
+                conjunts.addAll(((And)cnf).conjuncts());
+            }
+            else {
+                conjunts.add(cnf);
+            }
+        }
+        return new And(conjunts.toArray(new Sentence[conjunts.size()]));
+    }
 }
