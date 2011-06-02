@@ -1,5 +1,10 @@
 package logical;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 public class TestSentence extends TestCase {
@@ -70,6 +75,27 @@ public class TestSentence extends TestCase {
 
     }
     
+    public void testCombinations() {
+     
+        List<Symbol> symbols = new LinkedList<Symbol>();
+        symbols.add(new Symbol("P"));
+        symbols.add(new Symbol("Q"));
+        symbols.add(new Symbol("R"));
+        
+        final Set< Set<Symbol> > result = new HashSet< Set<Symbol> >();
+      
+        new Combinator<Symbol>() {
+            
+            public void foreach(Set<Symbol> set) {
+                result.add(new HashSet<Symbol>(set));            
+            }
+            
+        }.generate(symbols);
+        
+        assertEquals(8, result.size());
+        
+    }
+    
     public void testComplex() {
         
         // this is not working yet.
@@ -78,5 +104,7 @@ public class TestSentence extends TestCase {
         assertEquals("(¬B_1_1 or P_1_2 or P_2_1) and (¬P_1_2 or B_1_1) and (¬P_2_1 or B_1_1)", r1.toCnf().toString());
         
     }
+    // Claudia Botello =========== 044 627 1048067
+
 
 }
