@@ -1,21 +1,43 @@
 package logical;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 
 /*
  * Use this to generate all the combinations of a list of elements. 
+ * 
+ * Usage:
+ * 
+ * final Set< Set<Symbol> > result = new HashSet< Set<Symbol> >();
+ * new Combinator<Symbol>() {
+ *   
+ *   public void foreach(Set<Symbol> set) {
+ *       result.add(new HashSet<Symbol>(set));            
+ *   }
+ *   
+ * }.generate(symbols);
+ * 
+ * Other usage:
+ *   Set< Set<Symbol> > result = (new Combinator<Symbol>()).generateAll(symbols);
  */
-public abstract class Combinator<T> {
+public class Combinator<T> {
+	
+	private Set< Set<T> > result = null;
     
-    public abstract void foreach(Set<T> set);
+    public void foreach(Set<T> set) {
+    	if (result != null) {
+    		result.add(set);
+    	}
+    }
     
     private void generate(List<T> elemList, Set<T> set) {
         
-        if (elemList.isEmpty()) {            
-            foreach(set);
+        if (elemList.isEmpty()) {        
+       		foreach(set);
         }
         else {
             T head = elemList.get(0);
@@ -27,7 +49,14 @@ public abstract class Combinator<T> {
         }
     }
     
-    public void generate(List<T> symbols) {
-        generate(symbols, new HashSet<T>());
+    public void generate(Collection<T> symbols) {
+        generate(new LinkedList<T>(symbols), new HashSet<T>());
     }
+    
+    public Set< Set<T> > generateAll(Collection<T> symbols) {
+    	result = new HashSet<Set<T>>();
+    	generate(symbols);
+    	return result;
+    }
+    
 }

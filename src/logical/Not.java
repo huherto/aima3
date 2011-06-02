@@ -60,7 +60,7 @@ class Not extends Sentence {
         return new Not(s.toCnf());
     }
     
-    private Sentence sentence() {
+    public Sentence sentence() {
         return s;
     }
 }

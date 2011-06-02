@@ -1,6 +1,5 @@
 package logical;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -82,15 +81,7 @@ public class TestSentence extends TestCase {
         symbols.add(new Symbol("Q"));
         symbols.add(new Symbol("R"));
         
-        final Set< Set<Symbol> > result = new HashSet< Set<Symbol> >();
-      
-        new Combinator<Symbol>() {
-            
-            public void foreach(Set<Symbol> set) {
-                result.add(new HashSet<Symbol>(set));            
-            }
-            
-        }.generate(symbols);
+        Set< Set<Symbol> > result = (new Combinator<Symbol>()).generateAll(symbols);
         
         assertEquals(8, result.size());
         
@@ -98,13 +89,12 @@ public class TestSentence extends TestCase {
     
     public void testComplex() {
         
-        // this is not working yet.
+         // This is the example on the book.
         Sentence r1 = new Iff(new Symbol("B_1_1"), new Or(new Symbol("P_1_2"), new Symbol("P_2_1")));
         assertEquals("B_1_1 <=> (P_1_2 or P_2_1)", r1.toString());
         assertEquals("(¬B_1_1 or P_1_2 or P_2_1) and (¬P_1_2 or B_1_1) and (¬P_2_1 or B_1_1)", r1.toCnf().toString());
         
     }
-    // Claudia Botello =========== 044 627 1048067
 
 
 }

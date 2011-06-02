@@ -11,11 +11,17 @@ import java.util.Set;
 
 
 class And extends Sentence {
+	
 	List<Sentence> sList = new ArrayList<Sentence>();
+	
     public And(Sentence... sentences) {
     	for(Sentence s: sentences) {
     		sList.add(s);
     	}
+    }
+    
+    public And(List<Sentence> sentences) {
+    	sList.addAll(sentences);
     }
     
     public And(String... names) {
@@ -59,16 +65,16 @@ class And extends Sentence {
 
     @Override
     public Sentence toCnf() {
-        List<Sentence> conjunts = new LinkedList<Sentence>();
+        List<Sentence> conjuncts = new LinkedList<Sentence>();
         for(Sentence s: sList) {
             Sentence cnf = s.toCnf();
             if (cnf instanceof And) {
-                conjunts.addAll(((And)cnf).conjuncts());
+                conjuncts.addAll(((And)cnf).conjuncts());
             }
             else {
-                conjunts.add(cnf);
+                conjuncts.add(cnf);
             }
         }
-        return new And(conjunts.toArray(new Sentence[conjunts.size()]));
+        return new And(conjuncts);
     }
 }

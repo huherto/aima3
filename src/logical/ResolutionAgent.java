@@ -1,27 +1,26 @@
-/**
- * 
- */
 package logical;
 
-class TruthTableAgent extends LogicalAgent {
+public class ResolutionAgent extends LogicalAgent {
+
+    ResolutionKB kb;
     
-    TruthTableKB kb;
-    
-    public void tell(Sentence sentence) {
-    	kb.tell(sentence);
-    }
-    
-    public boolean query(Sentence alpha) {
-    	return kb.query(alpha);
-    }
-    
-    public TruthTableAgent(WumpusWorld ww) {
+    public ResolutionAgent(WumpusWorld ww) {
         super(ww);
     }
 
 	@Override
+    public void tell(Sentence sentence) {
+    	kb.tell(sentence);
+    }
+    
+	@Override
+    public boolean query(Sentence alpha) {
+    	return kb.query(alpha);
+    }
+    
+	@Override
 	public void initkb() {
-		kb = new TruthTableKB();		
+		kb = new ResolutionKB();		
 	}
 
 }

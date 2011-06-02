@@ -22,6 +22,6 @@ class Iff extends BinarySentence {
     public Sentence toCnf() {        
         Sentence s1 = this.s1.toCnf();
         Sentence s2 = this.s2.toCnf();        
-        return new And(new If(s1, s2).toCnf(), new If(s2, s1).toCnf());
+        return new And(new If(s1, s2).toCnf(), new If(s2, s1).toCnf()).toCnf();
     }
 }

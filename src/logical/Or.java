@@ -4,17 +4,29 @@
 package logical;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import util.StringUtil;
+
+import com.sun.xml.internal.ws.util.StringUtils;
+
 class Or extends Sentence {
+	
 	List<Sentence> sList = new ArrayList<Sentence>();
+	
     public Or(Sentence... sentences) {
     	for(Sentence s: sentences) {
     		sList.add(s);
     	}
+    }
+    
+    public Or(Collection<Sentence> sentences) {
+    	sList.addAll(sentences);
     }
     
     public Or(String... names) {
@@ -40,16 +52,14 @@ class Or extends Sentence {
 		}
 		return res;
 	}
-	
+
 	public String makeString() {
-		StringBuilder str = new StringBuilder();
+		List<String> list = new ArrayList<String>();
 		for(Sentence s : sList) {
-			if (str.length() > 0)
-				str.append(" or ");
-			str.append(paren(s));
+			list.add(paren(s));			
 		}
-		
-		return str.toString();
+		Collections.sort(list);
+		return StringUtil.join(list, " or ");		
 	}
 
     public List<Sentence> disjuncts() {
@@ -58,17 +68,38 @@ class Or extends Sentence {
     
     @Override
     public Sentence toCnf() {
+    	And and = null; // In case there is an and inside this or.
         List<Sentence> disjuncts = new LinkedList<Sentence>();
         for(Sentence s: sList) {
             Sentence cnf = s.toCnf();
             if (cnf instanceof Or) {
                 disjuncts.addAll(((Or)cnf).disjuncts());
             }
+            else if (cnf instanceof And) {
+            	if (and != null) {
+            		throw new RuntimeException("Do not how to handle more than one and!");
+            	}
+            	and = (And) cnf;
+            }
             else {
                 disjuncts.add(cnf);
             }
         }
-        return new Or(disjuncts.toArray(new Sentence[disjuncts.size()]));
+        
+        if (and != null) {
+        	
+        	List<Sentence> conjuncts = new LinkedList<Sentence>();
+        	for(Sentence conj : and.conjuncts()) {
+        		disjuncts.add(0, conj);
+        		conjuncts.add(new Or(disjuncts));        		
+        		disjuncts.remove(0);
+        	}
+        	
+        	return new And(conjuncts).toCnf();
+        	
+        }
+        
+        return new Or(disjuncts);
     }
    
 }

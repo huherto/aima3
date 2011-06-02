@@ -62,6 +62,17 @@ public class LogicalAgentsExamples extends TestCase {
         });
     }
     
+    public void testResolutionAgent() {
+        run(100, 4, new AgentFactory() {
+
+            @Override
+            public Agent create(WumpusWorld ww) {
+                return new ResolutionAgent(ww);
+            }
+            
+        });
+    }
+    
     public void testFCAgent() {
         run(10000, 4, new AgentFactory() {
 
