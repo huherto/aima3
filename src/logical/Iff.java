@@ -4,7 +4,7 @@
 package logical;
 
 
-class Iff extends BinarySentence {
+public class Iff extends BinarySentence {
     public Iff(Sentence s1, Sentence s2) {
         super(s1, s2);
     }

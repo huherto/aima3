@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 
-class TruthTableKB {
+public class TruthTableKB {
     
     Set<Sentence> sentences = new HashSet<Sentence>();
     
-    void tell(Sentence sentence) {
+    public void tell(Sentence sentence) {
         System.out.println(sentence);
         sentences.add(sentence);
     }

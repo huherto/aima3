@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class Not extends Sentence {
+public class Not extends Sentence {
     private Sentence s;
     public Not(Sentence s) {
         this.s = s;

@@ -1,7 +1,10 @@
 /**
  * 
  */
-package logical;
+package wumpus;
+
+import logical.Sentence;
+import logical.TruthTableKB;
 
 class TruthTableAgent extends LogicalAgent {
     

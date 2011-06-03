@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import util.Combinator;
+
 import junit.framework.TestCase;
 
 public class TestSentence extends TestCase {

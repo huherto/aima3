@@ -1,7 +1,7 @@
 /**
  * 
  */
-package logical;
+package wumpus;
 
 class WumpusSquare {
     boolean hasPit    = false;

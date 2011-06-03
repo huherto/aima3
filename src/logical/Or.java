@@ -13,9 +13,7 @@ import java.util.Set;
 
 import util.StringUtil;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
-class Or extends Sentence {
+public class Or extends Sentence {
 	
 	List<Sentence> sList = new ArrayList<Sentence>();
 	

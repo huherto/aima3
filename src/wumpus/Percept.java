@@ -1,7 +1,7 @@
 /**
  * 
  */
-package logical;
+package wumpus;
 
 class Percept {
     boolean stench  = false;

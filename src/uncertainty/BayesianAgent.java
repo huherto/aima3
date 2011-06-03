@@ -1,8 +1,8 @@
 package uncertainty;
 
-import logical.GridPos;
-import logical.RiskAwareAgent;
-import logical.WumpusWorld;
+import wumpus.GridPos;
+import wumpus.RiskAwareAgent;
+import wumpus.WumpusWorld;
 
 public class BayesianAgent extends RiskAwareAgent {
 

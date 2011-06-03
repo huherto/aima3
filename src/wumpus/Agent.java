@@ -1,9 +1,10 @@
 /**
  * 
  */
-package logical;
+package wumpus;
 
 import java.util.List;
+
 
 
 abstract class Agent {

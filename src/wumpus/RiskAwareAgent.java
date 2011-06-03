@@ -1,10 +1,12 @@
-package logical;
+package wumpus;
 
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 
-import logical.ObservedWorld.Square;
+import wumpus.ObservedWorld.Square;
+
+
 
 public abstract class RiskAwareAgent extends Agent {
 

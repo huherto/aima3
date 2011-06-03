@@ -1,4 +1,7 @@
-package logical;
+package wumpus;
+
+import logical.ResolutionKB;
+import logical.Sentence;
 
 public class ResolutionAgent extends LogicalAgent {
 

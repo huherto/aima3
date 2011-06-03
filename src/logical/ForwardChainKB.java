@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 
-class ForwardChainKB {
+public class ForwardChainKB {
     
     Set<HornClause> clauses = new HashSet<HornClause>();
     

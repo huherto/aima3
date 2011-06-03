@@ -1,4 +1,4 @@
-package logical;
+package wumpus;
 
 
 import java.util.Random;

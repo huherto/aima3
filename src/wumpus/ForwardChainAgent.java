@@ -1,7 +1,11 @@
-package logical;
+package wumpus;
 
 import java.util.Collections;
 import java.util.List;
+
+import logical.ForwardChainKB;
+import logical.HornClause;
+
 
 class ForwardChainAgent extends Agent {
     

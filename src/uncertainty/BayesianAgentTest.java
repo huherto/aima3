@@ -2,9 +2,10 @@ package uncertainty;
 
 import java.util.List;
 
+import wumpus.GridPos;
+import wumpus.ObservedWorld;
+
 import junit.framework.TestCase;
-import logical.GridPos;
-import logical.ObservedWorld;
 
 public class BayesianAgentTest extends TestCase {
 

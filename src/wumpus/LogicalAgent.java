@@ -1,7 +1,14 @@
-package logical;
+package wumpus;
 
 import java.util.Collections;
 import java.util.List;
+
+import logical.Iff;
+import logical.Not;
+import logical.Or;
+import logical.Sentence;
+import logical.Symbol;
+
 
 public abstract class LogicalAgent extends Agent {
 

@@ -8,9 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import logical.GridPos;
-import logical.ObservedWorld;
-import logical.ObservedWorld.Square;
+import wumpus.GridPos;
+import wumpus.ObservedWorld;
+import wumpus.ObservedWorld.Square;
+
 
 @SuppressWarnings("serial")
 public class FrontierModel extends HashMap<GridPos,Boolean> {

@@ -6,7 +6,7 @@ package logical;
 import java.util.Set;
 
 
-abstract class Sentence {
+abstract public class Sentence {
     
     protected static String paren(Sentence s) {
         if (s instanceof Not || s instanceof Symbol) {

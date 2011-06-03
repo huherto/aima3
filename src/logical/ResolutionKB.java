@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import util.Combinator;
+
 public class ResolutionKB {
 	
 	Set<Sentence> sentences = new HashSet<Sentence>();
@@ -22,9 +24,8 @@ public class ResolutionKB {
 				
 		List<Or> clauses = makeContradiction(alpha);
 		
-		Set<Or> newClauses = new HashSet<Or>();
 		while(true) {
-			
+			Set<Or> newClauses = new HashSet<Or>();			
 			for(int i = 0; i < clauses.size(); i++) {
 
 				for(int j = i + 1; j < clauses.size(); j++) {
@@ -85,9 +86,7 @@ public class ResolutionKB {
 
 			@Override
 			public void foreach(Set<Symbol> set) {
-				if (!set.isEmpty()) {
-					result.add(resolve(set, c1, c2));
-				}
+				result.add(resolve(set, c1, c2));
 			}
 			
 		}.generate(symbols);

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-class Symbol extends Sentence {
+public class Symbol extends Sentence {
     public String name;
 
     public Symbol(String name) {

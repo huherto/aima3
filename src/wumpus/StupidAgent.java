@@ -1,7 +1,8 @@
 /**
  * 
  */
-package logical;
+package wumpus;
+
 
 
 class StupidAgent extends Agent {

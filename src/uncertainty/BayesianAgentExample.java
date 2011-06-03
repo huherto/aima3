@@ -2,8 +2,9 @@ package uncertainty;
 
 import java.util.List;
 
+import wumpus.ObservedWorld;
+
 import junit.framework.TestCase;
-import logical.ObservedWorld;
 
 public class BayesianAgentExample extends TestCase {
 

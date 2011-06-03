@@ -17,23 +17,27 @@ public class TestResolutionKB extends TestCase {
 		
 		Set<Or> res = ResolutionKB.resolve(c1, c2);		
 		System.out.println(res);
-		assertEquals(3, res.size());		
+		assertEquals(4, res.size());		
 		
 		res = ResolutionKB.resolve(c1, c3);
-		assertEquals(1, res.size());				
 		System.out.println(res);
+		assertEquals(1, res.size());				
 		
 		res = ResolutionKB.resolve(c1, c4);
-		assertEquals(1, res.size());				
 		System.out.println(res);
+		assertEquals(2, res.size());				
 		
 		res = ResolutionKB.resolve(c2, c3);
-		//assertEquals(1, res.size());				
 		System.out.println(res);
+		assertEquals(4, res.size());				
 
 		res = ResolutionKB.resolve(c2, c4);
-		//assertEquals(1, res.size());				
 		System.out.println(res);
+		assertEquals(1, res.size());				
+		
+		res = ResolutionKB.resolve(c2, c5);
+		System.out.println(res);
+		assertEquals(1, res.size());				
 	}
 
 }

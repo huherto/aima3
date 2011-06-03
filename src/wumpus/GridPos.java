@@ -1,7 +1,7 @@
 /**
  * 
  */
-package logical;
+package wumpus;
 
 public class GridPos {
     public GridPos(int x, int y) {

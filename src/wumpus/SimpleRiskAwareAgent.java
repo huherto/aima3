@@ -1,6 +1,7 @@
-package logical;
+package wumpus;
 
 import java.util.List;
+
 
 
 public class SimpleRiskAwareAgent extends RiskAwareAgent {
