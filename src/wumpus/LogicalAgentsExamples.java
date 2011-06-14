@@ -3,9 +3,8 @@ package wumpus;
 
 import java.util.Random;
 
-import uncertainty.BayesianAgent;
-
 import junit.framework.TestCase;
+import uncertainty.BayesianAgent;
 
 public class LogicalAgentsExamples extends TestCase {
     
@@ -63,7 +62,7 @@ public class LogicalAgentsExamples extends TestCase {
     }
     
     public void testResolutionAgent() {
-        run(100, 4, new AgentFactory() {
+        run(10, 4, new AgentFactory() {
 
             @Override
             public Agent create(WumpusWorld ww) {

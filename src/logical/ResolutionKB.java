@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 import util.Combinator;
+import util.StopWatch;
 
 public class ResolutionKB {
 	
 	Set<Sentence> sentences = new HashSet<Sentence>();
+	
+	static StopWatch timer = new StopWatch();
 	
 	public void tell(Sentence sentence) {
 		sentences.add(sentence.toCnf());
@@ -22,34 +25,40 @@ public class ResolutionKB {
 	 */
 	public boolean query(Sentence alpha) {
 				
-		List<Or> clauses = makeContradiction(alpha);
+		List<Or> clauses = new ArrayList<Or>(makeContradiction(alpha));
 		
 		while(true) {
-			Set<Or> newClauses = new HashSet<Or>();			
-			for(int i = 0; i < clauses.size(); i++) {
+			Set<Or> newClauses = new HashSet<Or>();
+			
+			Or[] array = clauses.toArray(new Or[clauses.size()]);
+			for(int i = 0; i < array.length; i++) {
 
-				for(int j = i + 1; j < clauses.size(); j++) {
+				for(int j = i + 1; j < array.length; j++) {
 					
-					Set<Or> resolvents = resolve(clauses.get(i), clauses.get(j));
+					Set<Or> resolvents = resolve(array[i], array[j]);
 					if (containsEmptyClause(resolvents)) {
+		                System.out.println("true, clauses="+clauses.size());
 						return true;
 					}
 					newClauses.addAll(resolvents);					
 				}
 			}
+			
 			if (clauses.containsAll(newClauses)) {
+			    System.out.println("false, clauses="+clauses.size());
 				return false;
 			}
-			clauses.addAll(newClauses);			
+			
+			clauses.addAll(newClauses);
 		}
 	}
 
-	private List<Or> makeContradiction(Sentence alpha) {
+	private Set<Or> makeContradiction(Sentence alpha) {
 		List<Sentence> kb = new LinkedList<Sentence>(sentences);
 		kb.add(new Not(alpha));		
 		And and = (And)(new And(kb).toCnf());
 		
-		List<Or> result = new ArrayList<Or>();
+		Set<Or> result = new HashSet<Or>();
 		for(Sentence s : and.conjuncts()) {
 			if (s instanceof Or )
 				result.add((Or)s);

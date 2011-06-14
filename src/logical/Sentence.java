@@ -8,16 +8,7 @@ import java.util.Set;
 
 abstract public class Sentence {
     
-    protected static String paren(Sentence s) {
-        if (s instanceof Not || s instanceof Symbol) {
-            return s.toString();
-        }
-        else {
-            return "(" + s + ")";
-        }
-    }
-
-    private String str;
+    private String str = null;
     
     abstract boolean isTrue(Model model);
     
@@ -30,7 +21,7 @@ abstract public class Sentence {
 		if (this == other)
 			return true;
 		
-		// Convert to a cannonical representation to be able to compare.
+		// Convert to a canonical representation to be able to compare.
 		String s1 = toString();
 		String s2 = other.toString();
 		return s1.equals(s2);
@@ -49,6 +40,15 @@ abstract public class Sentence {
 
     protected abstract String makeString();
     
+    protected static String paren(Sentence s) {
+        if (s instanceof Not || s instanceof Symbol) {
+            return s.toString();
+        }
+        else {
+            return "(" + s + ")";
+        }
+    }
+
     public abstract Sentence toCnf();
     
 }
