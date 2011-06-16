@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public class BackPropagationNet {
 	
@@ -14,9 +13,13 @@ public class BackPropagationNet {
 	int B; // number of units on hidden layer.
 	int C; // number of units on output layer.
 
-	double w1[][]; // Weights connecting input layer(i) to hidden layer(j).
+	private double w1[][]; // Weights connecting input layer(i) to hidden layer(j).
 	
-	double w2[][]; // Weights connecting hidden layer(i) to output layer(j).
+	private double w2[][]; // Weights connecting hidden layer(i) to output layer(j).
+
+    private double h[]; // hidden units.
+
+    private double o[]; // output units.
 
 	public BackPropagationNet(int numInput, int numHidden, int numOutput) {
 		
@@ -40,29 +43,15 @@ public class BackPropagationNet {
 			}
 		}
 		
+        h = new double[B + 1];
+        
+        o = new double[C + 1];
+		
 	}
 
 	public void train(double x[], double y[]) {
 		
-		double h[] = new double[B + 1];
-		x[0] = 1.0;
-		h[0] = 1.0;
-		for(int j = 1; j <= B; j++) {
-			double sum = 0;
-			for(int i = 0; i <= A; i++) {
-				sum += w1[i][j] * x[i]; 
-			}
-			h[j] = 1 / (1 + Math.exp(-sum));				
-		}
-		
-		double o[] = new double[C + 1];
-		for(int j = 1; j <= C; j++) {
-			double sum = 0;
-			for(int i = 0; i <= B; i++) {
-				sum += w2[i][j] * h[i];
-			}
-			o[j] = 1 / (1 + Math.exp(-sum));				
-		}
+		calcOutput(x);
 		
 		double delta2[] = new double[C + 1];
 		for(int j = 1; j <= C; j++) {
@@ -95,6 +84,28 @@ public class BackPropagationNet {
 		}
 
 	}
+
+    public double[] calcOutput(double[] x) {
+        x[0] = 1.0;
+		h[0] = 1.0;
+		for(int j = 1; j <= B; j++) {
+			double sum = 0;
+			for(int i = 0; i <= A; i++) {
+				sum += w1[i][j] * x[i]; 
+			}
+			h[j] = 1 / (1 + Math.exp(-sum));				
+		}
+		
+		for(int j = 1; j <= C; j++) {
+			double sum = 0;
+			for(int i = 0; i <= B; i++) {
+				sum += w2[i][j] * h[i];
+			}
+			o[j] = 1 / (1 + Math.exp(-sum));				
+		}
+		
+		return o;
+    }
 	
 	public void trainEpoch(List<Example> trainSet) {
 		
