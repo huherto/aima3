@@ -7,13 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import util.Combinator;
-import util.StopWatch;
 
 public class ResolutionKB {
 	
 	Set<Sentence> sentences = new HashSet<Sentence>();
-	
-	static StopWatch timer = new StopWatch();
 	
 	public void tell(Sentence sentence) {
 		sentences.add(sentence.toCnf());

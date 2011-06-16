@@ -27,14 +27,14 @@ public class PerceptronTrainer {
 			if (missed.isEmpty())
 				break;
 			
-			float sum[] = new float[NUM_ATTRS + 1];
+			double sum[] = new double[NUM_ATTRS + 1];
 			for(int i = 0; i < sum.length; i++) {
 				sum[i] = 0;
 			}
 			
 			for(Example ex: missed) {
 				
-				float[] vector = ex.inputVector();
+				double[] vector = ex.inputVector();
 				int output = ptron.o(vector);
 				int sign;
 				if (output == 0 && ex.expectedOutput() == 1) {

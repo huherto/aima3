@@ -5,8 +5,10 @@ package neuralnets;
 
 public interface Example {
 	
-	float[] inputVector();
+	double[] inputVector();
 	
+	double[] outputVector();
+
 	int expectedOutput();
 	
 }
