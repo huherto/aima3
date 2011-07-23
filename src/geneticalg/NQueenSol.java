@@ -1,46 +1,103 @@
 package geneticalg;
 
+import java.util.Arrays;
 import java.util.Random;
 
-public class NQueenSol implements Solution {
+public class NQueenSol implements Solution
+{
 
 	static Random rand = new Random();
 	
-	private static final int NUM_QUEENS = 8;
-	private int cols[];		
+	private int cols[];	
+	private int fitness = -1;
 		
-	public NQueenSol() {
-		cols = new int[NUM_QUEENS];
+	public NQueenSol(int numQueens)
+	{
+		cols = new int[numQueens];
 	}
 
 	@Override
-	public int fitness() {
+	public int fitness()
+	{
+		if (fitness >= 0)
+			return fitness;
 		int count = 0;
-		for(int i = 0; i < cols.length; i++) {
-			if (hasConflicts(i))
+		for(int i = 0; i < cols.length; i++) 
+		{
+			if (!hasConflicts(i))
 				count++;
 		}
-		return NUM_QUEENS - count;
+		fitness = count;
+		return fitness;
 	}
 	
-	private boolean hasConflicts(int col) {
-		// TODO Auto-generated method stub
+	@Override
+	public int hashCode() {
+		
+		return Arrays.hashCode(cols);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NQueenSol other = (NQueenSol) obj;
+		if (!Arrays.equals(cols, other.cols))
+			return false;
 		return true;
 	}
 
 	@Override
-	public void mutate() {
-		int idx = rand.nextInt(NUM_QUEENS);
-		cols[idx] = rand.nextInt(NUM_QUEENS);
+	public String toString() {
+		return "NQueenSol [cols=" + Arrays.toString(cols) + "]";
+	}
+
+	private boolean hasConflicts(int col)
+	{
+		
+		for(int i = 0; i < cols.length; i++) {
+			int dist = Math.abs(col - i);
+			if (dist == 0) continue;
+			
+			if (cols[i] == cols[col]) {
+				return true;
+			}
+			
+			if (cols[i] == cols[col] - dist)
+				return true;
+			
+			if (cols[i] == cols[col] + dist)
+				return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public void mutate()
+	{
+		fitness = -1;
+		int idx = rand.nextInt(cols.length);
+		cols[idx] = rand.nextInt(cols.length);
 	}
 	
 	@Override
-	public Solution reproduce(Solution partner) {
+	public Solution reproduce(Solution partner)
+	{
+				
 		NQueenSol mother = (NQueenSol)partner;
-		NQueenSol child = new NQueenSol();
-//		int idx = NUM_QUEENS / 2;
-		int idx = rand.nextInt(NUM_QUEENS);
-		for(int i = 0; i < cols.length; i++) {
+		
+		if (mother.cols.length != cols.length) // different species?
+			throw new RuntimeException("Reproduction not allowed");
+		
+		NQueenSol child = new NQueenSol(cols.length);
+		int idx = 1 + rand.nextInt(cols.length - 2); //para que almenos se conserve un GEN
+		for(int i = 0; i < cols.length; i++)
+		{
 			if (i < idx)
 				child.cols[i] = this.cols[i];
 			else
@@ -50,14 +107,23 @@ public class NQueenSol implements Solution {
 	}
 
 	@Override
-	public boolean solved() {
-		return fitness() == NUM_QUEENS;
+	public boolean solved()
+	{
+		return fitness() == cols.length;
 	}
 
 	@Override
-	public void randomize() {
-		for(int i = 0; i < cols.length; i++) {
-			cols[i] = rand.nextInt(NUM_QUEENS);
+	public void randomize()
+	{
+		fitness = -1;
+		for(int i = 0; i < cols.length; i++)
+		{
+			cols[i] = rand.nextInt(cols.length);
 		}
+	}
+
+	@Override
+	public boolean fair() {
+		return fitness() >= cols.length/2;
 	}
 }
