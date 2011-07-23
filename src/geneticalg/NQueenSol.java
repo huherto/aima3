@@ -124,6 +124,6 @@ public class NQueenSol implements Solution
 
 	@Override
 	public boolean fair() {
-		return fitness() >= cols.length/2;
+		return fitness() >= cols.length/3;
 	}
 }
