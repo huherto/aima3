@@ -21,14 +21,22 @@ public class NQueenSol implements Solution
 	{
 		if (fitness >= 0)
 			return fitness;
-		int count = 0;
-		for(int i = 0; i < cols.length; i++) 
-		{
-			if (!hasConflicts(i))
-				count++;
+		fitness = 1;
+		int count = safeQueens();
+		for(int i = 0; i < 4; i++) {
+		    fitness *= count;
 		}
-		fitness = count;
 		return fitness;
+	}
+	
+	public int safeQueens() {
+        int count = 0;
+        for(int i = 0; i < cols.length; i++) 
+        {
+            if (!hasConflicts(i))
+                count++;
+        }
+        return count;
 	}
 	
 	@Override
@@ -95,7 +103,8 @@ public class NQueenSol implements Solution
 			throw new RuntimeException("Reproduction not allowed");
 		
 		NQueenSol child = new NQueenSol(cols.length);
-		int idx = 1 + rand.nextInt(cols.length - 2); //para que almenos se conserve un GEN
+		//int idx = 1 + rand.nextInt(cols.length - 2); //para que almenos se conserve un GEN
+		int idx = cols.length / 2;
 		for(int i = 0; i < cols.length; i++)
 		{
 			if (i < idx)
@@ -109,7 +118,7 @@ public class NQueenSol implements Solution
 	@Override
 	public boolean solved()
 	{
-		return fitness() == cols.length;
+		return safeQueens() == cols.length;
 	}
 
 	@Override
@@ -124,6 +133,6 @@ public class NQueenSol implements Solution
 
 	@Override
 	public boolean fair() {
-		return fitness() >= cols.length/3;
+		return safeQueens() > cols.length / 2;
 	}
 }

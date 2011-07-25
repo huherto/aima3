@@ -25,7 +25,7 @@ public class NQueensTest {
 				Solution x = randomSolution(population);
 				Solution y = randomSolution(population);
 				Solution child = x.reproduce(y);
-				if (rand.nextInt(20) == 0) child.mutate();
+				if (rand.nextInt(10) == 0) child.mutate();
 				if (child.fair())
 					newPopulation.add(child);
 			}
@@ -82,7 +82,7 @@ public class NQueensTest {
 		int sum  = 0;
 		for(Solution sol:population)
 		{
-			sum += sol.fitness() * sol.fitness() * sol.fitness();
+			sum += sol.fitness();
 		}
 		int acum = 0;
 		int aux = rand.nextInt(sum);
@@ -92,7 +92,7 @@ public class NQueensTest {
 			if(aux <= acum){
 				return sol;
 			}
-			acum += sol.fitness() * sol.fitness() * sol.fitness();
+			acum += sol.fitness();
 			last = sol;
 		}
 		return last;
@@ -101,14 +101,18 @@ public class NQueensTest {
 	@Test
 	public void testSimple() {
 		Set<Solution> population = new HashSet<Solution>();
-		while(population.size() < 100) {
+		while(population.size() < 10000) {
 			Solution sol = new NQueenSol(12);
 			sol.randomize();
 			if (sol.fair())
-				population.add(sol);
+			    population.add(sol);
 		}
+		fitnessStats(population);
 		Solution res = geneticAlgorithm(population);
-		
+		if (res.solved()) 
+		    System.out.print("Solved ");
+		else
+		    System.out.print("Not solved ");
 		System.out.println(res.toString());
 	}
 }
