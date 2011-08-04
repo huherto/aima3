@@ -133,6 +133,51 @@ public class TestMatrix {
         assertEquals(c, new Matrix(initc));
     }
     
+    @Test
+    public void testLUPSolve() {
+    	float initb[][] = {
+    			{3},
+    			{7},
+    			{8}
+    	};
+    	float initL[][] = {
+   			{1, 0, 0},
+   			{0.2f, 1, 0},
+   			{0.6f, 0.5f, 1}
+    	};
+    	float initU[][] = {
+       			{5, 6, 3},
+       			{0, 0.8f, -0.6f},
+       			{0, 0, 2.5f}
+        	};
+    	float initP[][] = {
+       			{0, 0, 1},
+       			{1, 0, 0},
+       			{0, 1, 0}
+        	};
+    	
+    	float initpi[][] = {
+       			{2},
+       			{0},
+       			{1}
+        	};
+    	
+    	float initx[][] = {
+    			{-1.4f},
+    			{2.2f},
+    			{0.6f}
+    	};
+    	Matrix b = new Matrix(initb);
+    	Matrix L = new Matrix(initL);
+    	Matrix U = new Matrix(initU);
+    	Matrix P = new Matrix(initP);
+    	Matrix pi = new Matrix(initpi);
+    	
+    	Matrix x = Matrix.LUPSolve(L, U, pi, b);
+    	
+        assertEquals(x, new Matrix(initx));
+    }
+    
     private void assertEquals(Matrix a, Matrix b) {
         if (a.getNumRows() != b.getNumRows())
             throw new AssertionError();

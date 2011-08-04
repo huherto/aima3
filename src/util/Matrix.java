@@ -110,7 +110,38 @@ public class Matrix  {
         return sum;
     }
     
-    public float at(int r, int c) {
+    public static Matrix LUPSolve(Matrix L, Matrix U, Matrix pi, Matrix b) {
+    	int n = L.getNumRows();
+    	Matrix y = new Matrix(n, 1);
+    	for(int i = 0; i < n; i++) {
+    		float sum  = 0;
+    		for(int j = 0; j < i; j++) {
+    			sum += L.at(i, j) * y.at(j, 0);
+    		}
+    		float bval = b.at((int)pi.at(i, 0), 0);
+    		y.set(i, 0, bval - sum);
+    	}
+    	System.out.println("y="+y);
+    	
+    	Matrix x = new Matrix(n, 1);
+    	for(int i = n - 1; i >= 0; i--) {
+    		float sum  = 0;
+    		for(int j = i + 1; j < n; j++) {
+    			sum += U.at(i, j) * x.at(j, 0);
+    		}
+    		float yval = y.at(i, 0);
+    		x.set(i, 0, (yval - sum)/U.at(i, i));
+    	}
+    	System.out.println("x="+x);
+    	
+    	return x;
+    }
+    
+    public void set(int row, int col, float val) {
+    	array[row][col] = val;
+	}
+
+	public float at(int r, int c) {
         return array[r][c];
     }
 
