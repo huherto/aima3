@@ -117,6 +117,23 @@ public class TestMatrix {
     }
     
     @Test
+    public void testMultiply4() {
+        
+        float inita[][] = {
+                {-3, 0, 3, 2},
+                {1, 7, -1 , 9}
+        };
+        float initb[] = {2, -3, 4, -1};
+        float initc[] = {4, -32};
+        
+        Matrix a = new Matrix(inita);
+        Vector b = new Vector(initb);        
+        
+        Vector c = Matrix.multiply(a, b);
+        assertEquals(c, new Vector(initc));
+    }
+    
+    @Test
     public void testInverse1() {
         
         float inita[][] = {
@@ -178,6 +195,20 @@ public class TestMatrix {
         assertEquals(x, new Matrix(initx));
     }
     
+    @Test
+    public void testVectorSum() {
+    	float inita[] = {1, 2, 3};
+    	float initb[] = {2, 3, 4};
+    	float initc[] = {3, 5, 7};
+    	
+    	Vector a = new Vector(inita);
+    	Vector b = new Vector(initb);
+
+    	Vector c = Vector.sum(a, b);
+    	
+        assertEquals(c, new Vector(initc));
+    }
+    
     private void assertEquals(Matrix a, Matrix b) {
         if (a.getNumRows() != b.getNumRows())
             throw new AssertionError();
@@ -193,4 +224,14 @@ public class TestMatrix {
         }
     }
 
+	private void assertEquals(Vector a, Vector b) {
+		if (a.size() != b.size())
+			throw new AssertionError();
+		for (int r = 0; r < a.size(); r++) {
+			float diff = Math.abs(a.at(r) - b.at(r));
+			if (diff > 0.0001) {
+				throw new AssertionError();
+			}
+		}
+	}
 }

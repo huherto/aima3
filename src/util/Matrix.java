@@ -110,6 +110,21 @@ public class Matrix  {
         return sum;
     }
     
+    public static Vector multiply(Matrix a, Vector b) {
+        if (a.numCols != b.size())
+            throw new IllegalArgumentException();
+        
+        float res[] = new float[a.numRows];
+        for(int r = 0; r < a.numRows; r++) {
+        	float sum = 0;
+            for(int c = 0; c < a.numCols; c++) {
+                sum += a.array[r][c] * b.at(c);  
+            }
+            res[r] = sum;
+        }
+        return new Vector(res);
+    }
+    
     public static Matrix LUPSolve(Matrix L, Matrix U, Matrix pi, Matrix b) {
     	int n = L.getNumRows();
     	Matrix y = new Matrix(n, 1);
