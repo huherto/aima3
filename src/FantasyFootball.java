@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -137,11 +139,21 @@ public class FantasyFootball {
     
   }
   
-  public List<TeamStats> simulateTournament() {
+  public List<TeamStats> simulateTournament() throws IOException {
     
     List<Game> pastGames = loadPastGames();
     
     Map<Team, TeamStats> allstats = loadTeamStats(pastGames);
+    
+    
+    File f = File.createTempFile("", "");
+    
+    f.getAbsolutePath();
+    f.deleteOnExit();
+    f.delete();
+    
+    String v = new String ( java.nio.file.Files.readAllBytes( java.nio.file.Paths.get(f.toURI()) ) );
+    
     
     List<Game> futureGames = loadFutureGames();
 
@@ -307,7 +319,7 @@ public class FantasyFootball {
     }
   };
   
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
     {
       FantasyFootball ff = new FantasyFootball();
